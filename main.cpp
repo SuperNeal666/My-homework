@@ -1,21 +1,13 @@
 #include <iostream>
-#include<cmath>
+
 using namespace std;
 
 int main()
-{
-    float a,b,c,d,x1,x2;
-    cin>>a>>b>>c;
-    d=b*b-4*a*c;
-    if(d<0)
-    {cout<<"此方程无解";
-    }
-    else if(d==0)
-    {x1=(-b)/(2*a);
-    cout<<"x1="<<x1;}
-    else
-    {x1=(-b+sqrt(d))/(2*a);
-    x2=(-b-sqrt(d))/(2*a);
-    cout<<"x1="<<x1<<"x2="<<x2;}
+{ float r, d, l, s;
+   cin>>r;
+   d=2*r;
+   l=2*3.14159;
+   s=3.14159*r*r;
+    cout << "d=" <<d<<" l="<<l<<" s="<<s;
     return 0;
 }
