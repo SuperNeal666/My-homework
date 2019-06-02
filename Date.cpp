@@ -1,101 +1,96 @@
-// Exercise 9.8 Solution: Date.cpp
-// Member-function definitions for class Date.
-#include <iostream> 
-#include "Date.h" // include definition of class Date
-using namespace std;
 
-Date::Date( int m, int d, int y ) 
+#include <iostream>
+#include "Date.h"
+
+
+const int Date::days[] =
+{ 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+
+Date::Date( int m, int d, int y )
 {
-   setDate( m, d, y ); // sets date 
-} // end Date constructor
-
-void Date::setDate( int mo, int dy, int yr )
+    setDate( m, d, y );
+}
+void Date::setDate( int mm, int dd, int yy )
 {
-   setMonth( mo ); // invokes function setMonth 
-   setDay( dy ); // invokes function setDay	
-   setYear( yr ); // invokes function setYear
-} // end function setDate
+    month = ( mm >= 1 && mm <= 12 ) ? mm : 1;
+    year = ( yy >= 1900 && yy <= 2100 ) ? yy : 1900;
 
-void Date::setDay( int d )
+
+    if ( month == 2 && leapYear( year ) )
+        day = ( dd >= 1 && dd <= 29 ) ? dd : 1;
+    else
+        day = ( dd >= 1 && dd <= days[ month ] ) ? dd : 1;
+}
+Date &Date::operator++()
 {
-   if ( month == 2 && leapYear() )  
-      day = ( d <= 29 && d >= 1 ) ? d : 1; 
-   else
-      day = ( d <= monthDays() && d >= 1 ) ? d : 1;
-} // end function setDay
-
-void Date::setMonth( int m ) 
-{ 
-   month = m <= 12 && m >= 1 ? m : 1; // sets month  
-} // end function setMonth
-
-void Date::setYear( int y ) 
+    helpIncrement();
+    return *this;
+}
+Date Date::operator++( int )
 {
-   year = y >= 2000 ? y : 2000; // sets year
-} // end function setYear
+    Date temp = *this;
+    helpIncrement();
 
-int Date::getDay() 
+
+    return temp;
+}
+const Date &Date::operator+=( int additionalDays )
 {
-   return day;
-} // end function getDay
+    for ( int i = 0; i < additionalDays; i++ )
+        helpIncrement();
 
-int Date::getMonth() 
-{ 
-   return month; 
-} // end function getMonth
+    return *this;
+}
 
-int Date::getYear() 
-{ 
-   return year; 
-} // end function getYear
 
-void Date::print()
+bool Date::leapYear( int testYear ) const
 {
-   cout << month << '-' << day << '-' << year << '\n'; // outputs date
-} // end function print
+    if ( testYear % 400 == 0 ||
+            ( testYear % 100 != 0 && testYear % 4 == 0 ) )
+        return true;
+    else
+        return false;
+}
 
-void Date::nextDay()
+
+int Date::getMonth() const
 {
-   setDay( day + 1 ); // increments day by 1
+    return month;
+}
 
-   if ( day == 1 ) 
-   {
-      setMonth( month + 1 ); // increments month by 1
 
-      if ( month == 1 )
-         setYear( year + 1 ); // increments year by 1
-   } // end if statement 
-} // end function nextDay
-
-bool Date::leapYear()
+bool Date::endOfMonth( int testDay ) const
 {
-   if ( year % 400 == 0 || ( year % 4 == 0 && year % 100 != 0 ) )
-         return true; // is a leap year
-      else
-         return false; // is not a leap year
-} // end function leapYear
-
-int Date::monthDays()
+    if ( month == 2 && leapYear( year ) )
+        return testDay == 29;
+    else
+        return testDay == days[ month ];
+}
+void Date::helpIncrement()
 {
-   const int days[ 12 ] =  
-     { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
-   return month == 2 && leapYear() ? 29 : days[ month - 1 ];
-} // end function monthDays
-
-/**************************************************************************
- * (C) Copyright 1992-2010 by Deitel & Associates, Inc. and               *
- * Pearson Education, Inc. All Rights Reserved.                           *
- *                                                                        *
- * DISCLAIMER: The authors and publisher of this book have used their     *
- * best efforts in preparing the book. These efforts include the          *
- * development, research, and testing of the theories and programs        *
- * to determine their effectiveness. The authors and publisher make       *
- * no warranty of any kind, expressed or implied, with regard to these    *
- * programs or to the documentation contained in these books. The authors *
- * and publisher shall not be liable in any event for incidental or       *
- * consequential damages in connection with, or arising out of, the       *
- * furnishing, performance, or use of these programs.                     *
- **************************************************************************/
-
+    if ( !endOfMonth( day ) )
+        day++;
+    else if ( month < 12 )
+    {
+        month++;
+        day = 1;
+    }
+    else
+    {
+        year++;
+        month = 1;
+        day = 1;
+    }
+}
+ostream &operator<<( ostream &output, const Date &d )
+{
+    static char *monthName[ 13 ] = { "", "January", "February",
+                                     "March", "April", "May", "June", "July", "August",
+                                     "September", "October", "November", "December"
+                                   };
+    output << monthName[ d.month ] << ' ' << d.day << ", " << d.year;
+    return output;
+}
 

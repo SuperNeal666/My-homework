@@ -1,36 +1,55 @@
-#include<iostream>
-#include"009.h"
+
+#include <iostream>
+#include "Employee.h"
 using namespace std;
-Employee::Employee()
+
+
+Employee::Employee( const string &first, const string &last,
+                    const string &ssn, int month, int day, int year )
+    : firstName( first ), lastName( last ), socialSecurityNumber( ssn ),
+      birthDate( month, day, year )
 {
-    salary=0;
+
 }
-void Employee::setname(string name1)
+void Employee::setFirstName( const string &first )
 {
-    name=name1;
+    firstName = first;
 }
-string Employee::getname() const
+string Employee::getFirstName() const
 {
-    return name;
+    return firstName;
 }
-void Employee::setsurname(string name2)
+void Employee::setLastName( const string &last )
 {
-    surname=name2;
+    lastName = last;
 }
-string Employee::getsurname() const
+string Employee::getLastName() const
 {
-    return surname;
+    return lastName;
 }
-void Employee::setsalary(int money1)
+void Employee::setSocialSecurityNumber( const string &ssn )
 {
-    salary=money1;
+    socialSecurityNumber = ssn;
 }
-int Employee::getsalary() const
+string Employee::getSocialSecurityNumber() const
 {
-    return salary;
+    return socialSecurityNumber;
 }
-void Employee::displayMessage()
+void Employee::setBirthDate( int month, int day, int year )
 {
-    addsalary=salary*1/10+salary;
-    cout<<"After adding salary,his/her salary is: "<<addsalary<<"\n";
+    birthDate.setDate( month, day, year );
 }
+
+
+Date Employee::getBirthDate() const
+{
+    return birthDate;
+}
+void Employee::print() const
+{
+    cout << getFirstName() << ' ' << getLastName()
+         << "\nbirthday: " << getBirthDate()
+         << "\nsocial security number: " << getSocialSecurityNumber();
+}
+
+
